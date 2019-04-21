@@ -19,3 +19,10 @@ target in Compile in doc := baseDirectory.value / "../shell/src/universal/doc/ap
 libraryDependencies += "com.thoughtworks.xstream" % "xstream" % "1.4.11.1"
 
 libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.8.0"
+
+val circeVersion = "0.11.1"
+libraryDependencies ++= Seq(
+  "io.circe" %% "circe-core" % circeVersion % Test,
+  "io.circe" %% "circe-generic" % circeVersion % Test,
+  "io.circe" %% "circe-parser" % circeVersion % Test
+)
