@@ -25,6 +25,13 @@ object LogisticGAM {
 
   private[classification] object BSpline {
 
+    def generateEdgeKnots(x: Array[Double], dataType: DataType): (Double, Double) =
+      dataType match {
+        case Numerical => (x.min, x.max)
+        case Categorical => (x.min + 0.5, x.max + 0.5)
+      }
+
+
     type Extrapolate = (Array[Boolean], Array[Boolean], Array[Boolean])
 
     /**
@@ -46,7 +53,7 @@ object LogisticGAM {
           s"Number of splines must be >= 1: $nSplines < 1")
       }
 
-      if (splineOrder < 1) {
+      if (splineOrder < 0) {
         throw new IllegalArgumentException(
           s"Spline order must be >= 1: $splineOrder < 1")
       }

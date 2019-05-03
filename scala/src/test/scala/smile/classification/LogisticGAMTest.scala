@@ -67,7 +67,7 @@ class LogisticGAMTest {
   def testBSplineBasisInvalidSplineOrder(): Unit = {
     val (x, edgeKnots) = randomInputData()
     val nSplines = 2
-    val splineOrder = 0
+    val splineOrder = -1
     bSplineBasis(x, edgeKnots, nSplines, splineOrder)
     ()
   }
