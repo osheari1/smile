@@ -26,8 +26,7 @@ class LogisticGAMTest {
           case (row, rowTest) => assertArrayEquals(row, rowTest, 0.000000001)
         }
       }
-    case _ =>
-      assert(assertion = false, "Could not parse json data.")
+    case None => assert(assertion = false, "Could not parse json test data.")
   }
 
   @Test(expected = classOf[IllegalArgumentException])
@@ -62,15 +61,14 @@ private object Utils {
 
   type bSplineData =
     (Vector[Array[Array[Double]]],
-      Vector[Array[Double]],
-      Vector[(Double, Double)],
-      Vector[Int],
-      Vector[Int])
+     Vector[Array[Double]],
+     Vector[(Double, Double)],
+     Vector[Int],
+     Vector[Int])
 
   def randomInputData(): (Array[Double], (Double, Double)) = {
     val rng = new Random(1)
-    val x =
-      (for {_ <- 10 to rng.nextInt(100)} yield rng.nextDouble()).toArray
+    val x = (for { _ <- 10 to rng.nextInt(100) } yield rng.nextDouble()).toArray
     val edgeKnots = (x.min, x.max)
     (x, edgeKnots)
   }
@@ -85,24 +83,24 @@ private object Utils {
       extractFromJson[Int]("splineOrder"),
     ) match {
       case (Some(basis),
-      Some(x),
-      Some(edgeKnots),
-      Some(nSplines),
-      Some(splineOrder)) =>
+            Some(x),
+            Some(edgeKnots),
+            Some(nSplines),
+            Some(splineOrder)) =>
         Some((basis, x, edgeKnots, nSplines, splineOrder))
       case _ => None
     }
   }
 
   def extractFromJson[A](key: String)(
-    implicit decoder: Decoder[A],
-    handle: Option[Vector[Json]]): Option[Vector[A]] = {
-    handle flatMap { jsons =>
+      implicit decoder: Decoder[A],
+      source: Option[Vector[Json]]): Option[Vector[A]] = {
+    source flatMap { jsons =>
       Some {
         jsons map { json =>
           json.hcursor.get[A](key) match {
             case Right(x) => Some(x)
-            case _ => None
+            case _        => None
           }
         } flatMap (_.toList)
       }
@@ -120,5 +118,4 @@ private object Utils {
     assert(json != Json.Null, "Could load test data from file.")
     json.asArray
   }
-
 }
